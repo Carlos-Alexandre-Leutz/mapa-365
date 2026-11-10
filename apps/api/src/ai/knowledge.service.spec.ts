@@ -31,6 +31,21 @@ describe('KnowledgeService', () => {
     expect(service.getSystemPrompt()).toBe('Link: {{LINK}}');
   });
 
+  it('avisa no log, sem derrubar a API, quando o prompt não existe', () => {
+    const error = jest.spyOn((service as any).logger, 'error').mockImplementation();
+    expect(() => service.onModuleInit()).not.toThrow();
+    expect(error).toHaveBeenCalledWith(expect.stringContaining('indisponível'));
+    error.mockRestore();
+  });
+
+  it('não registra erro quando o prompt existe', () => {
+    writeFileSync(join(dir, 'prompt.md'), 'ok');
+    const error = jest.spyOn((service as any).logger, 'error').mockImplementation();
+    service.onModuleInit();
+    expect(error).not.toHaveBeenCalled();
+    error.mockRestore();
+  });
+
   it('lê o arquivo de novo a cada chamada, sem precisar reiniciar', () => {
     writeFileSync(join(dir, 'prompt.md'), 'versão 1');
     expect(service.getSystemPrompt()).toBe('versão 1');
