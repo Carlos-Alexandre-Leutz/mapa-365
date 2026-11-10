@@ -18,6 +18,7 @@ services:
       dockerfile: Dockerfile
       args:
         SERVICE: api
+    image: mapa365-api
     restart: always
     expose:
       - "3002"
@@ -32,6 +33,16 @@ services:
     volumes:
       # Conteúdo real do atendimento: pasta do servidor, fora do Git e fora da imagem.
       - ${KNOWLEDGE_HOST_DIR:-./knowledge}:/knowledge:ro
+
+  # Aplica as migrations do Prisma: docker compose --profile tools run --rm migrate
+  migrate:
+    profiles: ["tools"]
+    image: mapa365-api
+    depends_on:
+      - db
+    environment:
+      - DATABASE_URL=postgresql://${POSTGRES_USER}:${POSTGRES_PASSWORD}@db:5432/${POSTGRES_DB}?schema=public
+    command: pnpm --filter @mapa365/api exec prisma migrate deploy --schema=./prisma/schema.prisma
 
   bff:
     profiles: ["site"]
