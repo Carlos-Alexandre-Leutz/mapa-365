@@ -3,8 +3,12 @@ import {
   ForbiddenException,
   Get,
   Header,
+  HttpCode,
+  Post,
   Query,
+  UseGuards,
 } from '@nestjs/common';
+import { MetaSignatureGuard } from './meta-signature.guard';
 
 @Controller('webhooks/whatsapp')
 export class WhatsappController {
@@ -20,5 +24,12 @@ export class WhatsappController {
       return challenge;
     }
     throw new ForbiddenException();
+  }
+
+  @Post()
+  @HttpCode(200)
+  @UseGuards(MetaSignatureGuard)
+  receive(): string {
+    return 'EVENT_RECEIVED';
   }
 }
