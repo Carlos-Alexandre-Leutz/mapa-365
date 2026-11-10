@@ -43,12 +43,12 @@ services:
     build:
       context: .
       dockerfile: Dockerfile
+      args:
+        NEXT_PUBLIC_BFF_URL: ${NEXT_PUBLIC_BFF_URL:?defina NEXT_PUBLIC_BFF_URL no .env}
     restart: always
     command: pnpm --filter @mapa365/web start
     ports:
       - "127.0.0.1:3000:3000"
-    environment:
-      - NEXT_PUBLIC_BFF_URL=${NEXT_PUBLIC_BFF_URL:?defina NEXT_PUBLIC_BFF_URL no .env}
 
 volumes:
   postgres_data:

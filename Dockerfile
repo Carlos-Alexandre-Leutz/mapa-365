@@ -20,6 +20,10 @@ COPY turbo.json turbo.json
 
 RUN pnpm --filter=@mapa365/api exec prisma generate --schema=./prisma/schema.prisma
 
+# NEXT_PUBLIC_* é gravada no bundle do Next durante o build, então precisa chegar aqui
+ARG NEXT_PUBLIC_BFF_URL
+ENV NEXT_PUBLIC_BFF_URL=$NEXT_PUBLIC_BFF_URL
+
 RUN pnpm turbo build
 
 FROM base AS runner
