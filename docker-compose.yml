@@ -1,0 +1,54 @@
+version: '3.8'
+
+services:
+
+  db:
+    image: postgres:16-alpine
+    container_name: saas-postgres-db
+    restart: always
+    environment:
+      POSTGRES_USER: alexandre
+      POSTGRES_PASSWORD: mysecretpassword
+      POSTGRES_DB: saas_business_manager
+    ports:
+      - "5432:5432"
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+
+
+  api-tasks:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    command: pnpm --filter api-tasks start
+    ports:
+      - "3002:3002"
+    depends_on:
+      - db
+    environment:
+      - DATABASE_URL=postgresql://alexandre:mysecretpassword@db:5432/saas_business_manager?schema=public
+
+  bff:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    command: pnpm --filter bff start
+    ports:
+      - "3001:3001"
+    depends_on:
+      - api-tasks
+    environment:
+      - TASKS_API_URL=http://api-tasks:3002
+
+  frontend:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    command: pnpm --filter web start
+    ports:
+      - "3000:3000"
+    environment:
+      - NEXT_PUBLIC_BFF_URL=http://localhost:3001
+
+volumes:
+  postgres_data:

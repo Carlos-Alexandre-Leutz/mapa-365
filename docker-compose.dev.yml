@@ -1,0 +1,65 @@
+version: '3.8'
+
+services:
+  db:
+    image: postgres:16-alpine
+    container_name: saas-postgres-db
+    restart: always
+    environment:
+      POSTGRES_USER: alexandre
+      POSTGRES_PASSWORD: mysecretpassword
+      POSTGRES_DB: saas_business_manager
+    ports:
+      - "5432:5432"
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+
+  api-tasks:
+    build:
+      context: .
+      dockerfile: Dockerfile.dev
+    command: sh -c "pnpm --filter api-tasks exec prisma generate --schema=prisma/schema.prisma && pnpm --filter api-tasks dev"
+    volumes:
+      - .:/app
+      - /app/node_modules
+      - /app/apps/api-tasks/node_modules
+      - /app/node_modules/.bin
+
+    ports:
+      - "3002:3002"
+    depends_on:
+      - db
+    environment:
+      - DATABASE_URL=postgresql://alexandre:mysecretpassword@db:5432/saas_business_manager?schema=public
+
+  bff:
+    build:
+      context: .
+      dockerfile: Dockerfile.dev
+    # TROCADO: de 'start' para 'dev'
+    command: pnpm --filter bff dev
+    volumes:
+      - .:/app
+      - /app/node_modules
+    ports:
+      - "3001:3001"
+    depends_on:
+      - api-tasks
+    env_file:
+      - .env
+
+  frontend:
+    build:
+      context: .
+      dockerfile: Dockerfile.dev
+    command: pnpm --filter web dev
+    volumes:
+      - .:/app
+      - /app/node_modules
+    ports:
+      - "3000:3000"
+    environment:
+      - NEXT_PUBLIC_BFF_URL=http://localhost:3001
+
+volumes:
+  postgres_data:

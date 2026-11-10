@@ -1,0 +1,38 @@
+name: Continuous Deployment
+
+on:
+  push:
+    branches: [main, staging]
+
+jobs:
+
+  deploy-staging:
+    if: github.ref == 'refs/heads/staging'
+    environment: staging
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Install dependencies
+        run: npm install
+
+      - name: Run Prisma Migrations
+        run: npx prisma@6.4.0 migrate deploy --schema ./apps/api-tasks/prisma/schema.prisma
+        env:
+          DATABASE_URL: ${{ secrets.DATABASE_URL }}
+
+      - name: Trigger Render Deploy
+        run: |
+          echo "🚀 Deploy para Staging iniciado com sucesso!"
+          curl -f ${{ secrets.RENDER_STAGING_DEPLOY_HOOK }}
+
+  deploy-production:
+    if: github.ref == 'refs/heads/main'
+    runs-on: ubuntu-latest
+    environment: production
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Deploying to Production
+        run: |
+          echo "🌍 Iniciando Deploy em Produção (Main)..."
