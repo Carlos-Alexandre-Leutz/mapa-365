@@ -1,4 +1,4 @@
-# Produção (VPS). O banco e a API não têm porta aberta para fora.
+# Produção (VPS). Só o Caddy (80 e 443) é publicado; o banco e a API não têm porta aberta para fora.
 # O MVP sobe só db e api; bff e frontend ficam em perfis para quando o chat do site e a área logada entrarem.
 services:
   db:
@@ -61,5 +61,22 @@ services:
     expose:
       - "3000"
 
+  caddy:
+    image: caddy:2-alpine
+    restart: always
+    ports:
+      - "80:80"
+      - "443:443"
+    depends_on:
+      - api
+    environment:
+      - API_DOMAIN=${API_DOMAIN:?defina API_DOMAIN no .env}
+    volumes:
+      - ./infra/Caddyfile:/etc/caddy/Caddyfile:ro
+      - caddy_data:/data
+      - caddy_config:/config
+
 volumes:
   postgres_data:
+  caddy_data:
+  caddy_config:
