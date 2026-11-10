@@ -28,6 +28,7 @@ describe('GeminiClient', () => {
   afterEach(() => {
     delete process.env.GEMINI_API_KEY;
     delete process.env.GEMINI_MODEL;
+    delete process.env.GEMINI_BASE_URL;
   });
 
   it('envia prompt e histórico e devolve o texto', async () => {
@@ -51,6 +52,15 @@ describe('GeminiClient', () => {
     fetchMock.mockResolvedValue(ok('ok'));
     await client.generate('s', [{ role: 'user', text: 'oi' }]);
     expect(fetchMock.mock.calls[0][0]).toContain('outro-modelo:generateContent');
+  });
+
+  it('aceita outro endereço base (para testes locais)', async () => {
+    process.env.GEMINI_BASE_URL = 'http://127.0.0.1:9999/v1beta';
+    fetchMock.mockResolvedValue(ok('ok'));
+    await client.generate('s', [{ role: 'user', text: 'oi' }]);
+    expect(fetchMock.mock.calls[0][0]).toBe(
+      'http://127.0.0.1:9999/v1beta/models/gemini-2.5-flash:generateContent',
+    );
   });
 
   it('tenta de novo em 429 e 5xx', async () => {

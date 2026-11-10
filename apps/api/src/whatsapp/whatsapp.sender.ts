@@ -14,8 +14,9 @@ export class WhatsappSender {
     }
     const version = process.env.WHATSAPP_API_VERSION ?? 'v23.0';
 
+    const graphUrl = process.env.WHATSAPP_GRAPH_URL ?? 'https://graph.facebook.com';
     const response = await fetch(
-      `https://graph.facebook.com/${version}/${phoneNumberId}/messages`,
+      `${graphUrl}/${version}/${phoneNumberId}/messages`,
       {
         method: 'POST',
         headers: {

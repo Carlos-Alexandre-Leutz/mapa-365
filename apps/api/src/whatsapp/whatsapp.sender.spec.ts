@@ -15,6 +15,7 @@ describe('WhatsappSender', () => {
     delete process.env.WHATSAPP_ACCESS_TOKEN;
     delete process.env.WHATSAPP_PHONE_NUMBER_ID;
     delete process.env.WHATSAPP_API_VERSION;
+    delete process.env.WHATSAPP_GRAPH_URL;
   });
 
   it('envia o texto pela Cloud API com o token no cabeçalho', async () => {
@@ -35,6 +36,12 @@ describe('WhatsappSender', () => {
     process.env.WHATSAPP_API_VERSION = 'v25.0';
     await sender.sendText('1', 'oi');
     expect(fetchMock.mock.calls[0][0]).toContain('/v25.0/');
+  });
+
+  it('aceita outro endereço da Graph API (para testes locais)', async () => {
+    process.env.WHATSAPP_GRAPH_URL = 'http://127.0.0.1:9999';
+    await sender.sendText('1', 'oi');
+    expect(fetchMock.mock.calls[0][0]).toBe('http://127.0.0.1:9999/v23.0/111222333/messages');
   });
 
   it('corta textos acima do limite do WhatsApp', async () => {

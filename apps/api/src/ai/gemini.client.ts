@@ -17,7 +17,9 @@ export class GeminiClient {
       throw new Error('GEMINI_API_KEY não configurada');
     }
     const model = process.env.GEMINI_MODEL ?? 'gemini-2.5-flash';
-    const url = `https://generativelanguage.googleapis.com/v1beta/models/${model}:generateContent`;
+    const baseUrl =
+      process.env.GEMINI_BASE_URL ?? 'https://generativelanguage.googleapis.com/v1beta';
+    const url = `${baseUrl}/models/${model}:generateContent`;
     const body = JSON.stringify({
       systemInstruction: { parts: [{ text: systemPrompt }] },
       contents: history.map((turn) => ({
