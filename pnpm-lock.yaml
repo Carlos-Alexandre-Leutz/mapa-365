@@ -10,13 +10,13 @@ importers:
     devDependencies:
       turbo:
         specifier: latest
-        version: 2.8.20
+        version: 2.11.10
 
-  apps/api-tasks:
+  apps/api:
     dependencies:
       '@nestjs-modules/mailer':
         specifier: ^2.3.7
-        version: 2.3.7(@nestjs/common@11.1.17(class-transformer@0.5.1)(class-validator@0.14.4)(reflect-metadata@0.2.2)(rxjs@7.8.2))(@nestjs/core@11.1.17)(chokidar@4.0.3)(nodemailer@9.0.3)(svgo@4.0.2)(terser@5.46.1)(typescript@5.9.3)
+        version: 2.3.7(@nestjs/common@11.1.17(class-transformer@0.5.1)(class-validator@0.14.4)(reflect-metadata@0.2.2)(rxjs@7.8.2))(@nestjs/core@11.1.17)(nodemailer@9.0.3)(svgo@4.0.2)(terser@5.46.1)(typescript@5.9.3)
       '@nestjs/common':
         specifier: ^11.0.1
         version: 11.1.17(class-transformer@0.5.1)(class-validator@0.14.4)(reflect-metadata@0.2.2)(rxjs@7.8.2)
@@ -1703,33 +1703,33 @@ packages:
   '@tsconfig/node16@1.0.4':
     resolution: {integrity: sha512-vxhUy4J8lyeyinH7Azl1pdd43GJhZH/tP2weN8TntQblOY+A0XbT8DJk1/oCPuOOyg/Ja757rG0CgHcWC8OfMA==}
 
-  '@turbo/darwin-64@2.8.20':
-    resolution: {integrity: sha512-FQ9EX1xMU5nbwjxXxM3yU88AQQ6Sqc6S44exPRroMcx9XZHqqppl5ymJF0Ig/z3nvQNwDmz1Gsnvxubo+nXWjQ==}
+  '@turbo/darwin-64@2.11.10':
+    resolution: {integrity: sha512-By4idRap5+nLnMuRzLB4qkOPRlvNdyY1ne4VJYDyUoUB11H94k7uif9mbe3JT8JSNXs1D68uMcBj6hJ/jMQRvA==}
     cpu: [x64]
     os: [darwin]
 
-  '@turbo/darwin-arm64@2.8.20':
-    resolution: {integrity: sha512-Gpyh9ATFGThD6/s9L95YWY54cizg/VRWl2B67h0yofG8BpHf67DFAh9nuJVKG7bY0+SBJDAo5cMur+wOl9YOYw==}
+  '@turbo/darwin-arm64@2.11.10':
+    resolution: {integrity: sha512-pyEYlVcuexOPa92p0Wlwl9YT1Is5D60lxN3ItWm3g30YLvFaUq86TF4BBWg5ZAc0uMTnrOzCvuCsOBTdzUWnRQ==}
     cpu: [arm64]
     os: [darwin]
 
-  '@turbo/linux-64@2.8.20':
-    resolution: {integrity: sha512-p2QxWUYyYUgUFG0b0kR+pPi8t7c9uaVlRtjTTI1AbCvVqkpjUfCcReBn6DgG/Hu8xrWdKLuyQFaLYFzQskZbcA==}
+  '@turbo/linux-64@2.11.10':
+    resolution: {integrity: sha512-1tYeR/IDZ5HEdsb0jNq2L2xam5nMQ+g80tlV2BZmv4OFw+pMcUM0mMmUcfc5wXPPNHVNPuDMjh9Y8G8HgXPLZA==}
     cpu: [x64]
-    os: [linux]
+    os: [android, linux]
 
-  '@turbo/linux-arm64@2.8.20':
-    resolution: {integrity: sha512-Gn5yjlZGLRZWarLWqdQzv0wMqyBNIdq1QLi48F1oY5Lo9kiohuf7BPQWtWxeNVS2NgJ1+nb/DzK1JduYC4AWOA==}
+  '@turbo/linux-arm64@2.11.10':
+    resolution: {integrity: sha512-HuekQxvVGhUd46g1Im/DKdOtglHr4/gguZAvzEpPUgtxNkztSa8lWhQEGQ+EmPQ0n7w19qjThFU+OfEEd0uvlw==}
     cpu: [arm64]
-    os: [linux]
+    os: [android, linux]
 
-  '@turbo/windows-64@2.8.20':
-    resolution: {integrity: sha512-vyaDpYk/8T6Qz5V/X+ihKvKFEZFUoC0oxYpC1sZanK6gaESJlmV3cMRT3Qhcg4D2VxvtC2Jjs9IRkrZGL+exLw==}
+  '@turbo/windows-64@2.11.10':
+    resolution: {integrity: sha512-UJOP3BkbreY3/JlMgJR6ZiimxYIBn+c+B4tnBIxD0E9c3Estmk+XoVNVBNBottZLNRXe3/ScgOU4+/k8tIWysg==}
     cpu: [x64]
     os: [win32]
 
-  '@turbo/windows-arm64@2.8.20':
-    resolution: {integrity: sha512-voicVULvUV5yaGXo0Iue13BcHGYW3u0VgqSbfQwBaHbpj1zLjYV4KIe+7fYIo6DO8FVUJzxFps3ODCQG/Wy2Qw==}
+  '@turbo/windows-arm64@2.11.10':
+    resolution: {integrity: sha512-xOkEjF3ws/b/YNlc+bvJHMYBn+vL+QbEISZFVi0qS+ImmhA1X3/gmNmBrjjIG3dg6aeN+n6gQitzSkXQ286qJQ==}
     cpu: [arm64]
     os: [win32]
 
@@ -1928,6 +1928,7 @@ packages:
 
   '@ungap/structured-clone@1.3.0':
     resolution: {integrity: sha512-WmoN8qaIAo7WTYWbAZuG8PYEhn5fkz7dZrqTBZ7dtt//lL2Gwms1IcnQ5yHqjDfX8Ft5j4YzDM23f87zBfDe9g==}
+    deprecated: Potential CWE-502 - Update to 1.3.1 or higher
 
   '@unrs/resolver-binding-android-arm-eabi@1.11.1':
     resolution: {integrity: sha512-ppLRUgHVaGRWUx0R0Ut06Mjo9gBaBkg3v/8AxusGLhsIotbBLuRk51rAzqLC8gq6NyyAojEXglNjzf6R948DNw==}
@@ -3142,6 +3143,7 @@ packages:
   eslint@9.39.4:
     resolution: {integrity: sha512-XoMjdBOwe/esVgEvLmNsD3IRHkm7fbKIUGvrleloJXUZgDHig2IPWNniv+GwjyJXzuNqVjlr5+4yVUZjycJwfQ==}
     engines: {node: ^18.18.0 || ^20.9.0 || >=21.1.0}
+    deprecated: This version is no longer supported. Please see https://eslint.org/version-support for other options.
     hasBin: true
     peerDependencies:
       jiti: '*'
@@ -3475,11 +3477,6 @@ packages:
 
   graceful-fs@4.2.11:
     resolution: {integrity: sha512-RbJ5/jmFcNNCcDV5o9eTnBLJ/HszWV0P73bc+Ff4nS/rJj+YaS6IGyiOL0VoBYX+l1Wrl3k63h/KrH+nhJ0XvQ==}
-
-  handlebars@4.7.8:
-    resolution: {integrity: sha512-vafaFqs8MZkRrSX7sFVUdo3ap/eNiLnb4IakshzvP56X5Nr1iGKAIqdX6tMlm6HcNRIkr6AxO5jFEoJzzpT8aQ==}
-    engines: {node: '>=0.4.7'}
-    hasBin: true
 
   handlebars@4.7.9:
     resolution: {integrity: sha512-4E71E0rpOaQuJR2A3xDZ+GM1HyWYv1clR58tC8emQNeQe3RH7MAzSbat+V0wG78LQBo6m6bzSG/L4pBuCsgnUQ==}
@@ -4495,6 +4492,7 @@ packages:
 
   node-abort-controller@3.1.1:
     resolution: {integrity: sha512-AGK2yQKIjRuqnc6VkX2Xj5d+QW8xZ87pa1UK6yA6ouUyuxfHuMP6umE5QK7UmTeOAymo+Zx1Fxiuw9rVx8taHQ==}
+    deprecated: This package is no longer needed on supported Node.js versions. Node.js 16+ includes AbortController and AbortSignal as built-in globals. All Node.js versions requiring this polyfill are end-of-life. Use the built-in globals instead.
 
   node-addon-api@8.7.0:
     resolution: {integrity: sha512-9MdFxmkKaOYVTV+XVRG8ArDwwQ77XIgIPyKASB1k3JPq3M8fGQQQE3YpMOrKm6g//Ktx8ivZr8xo1Qmtqub+GA==}
@@ -5637,8 +5635,8 @@ packages:
   tslib@2.8.1:
     resolution: {integrity: sha512-oJFu94HQb+KVduSUQL7wnpmqnfmLsOA/nAh6b6EH0wCEoK0/mPeXU6c3wKDV83MkOuHPRHtSXKKU99IBazS/2w==}
 
-  turbo@2.8.20:
-    resolution: {integrity: sha512-Rb4qk5YT8RUwwdXtkLpkVhNEe/lor6+WV7S5tTlLpxSz6MjV5Qi8jGNn4gS6NAvrYGA/rNrE6YUQM85sCZUDbQ==}
+  turbo@2.11.10:
+    resolution: {integrity: sha512-3GJYwig8ygEI89oaOZdduJX8/aw6O9eRPYHoIt6T3FZl9hkKjiyIspufJoVgqXihPoJu8M5CSV0DlZvzfohBCw==}
     hasBin: true
 
   type-check@0.4.0:
@@ -6895,7 +6893,7 @@ snapshots:
       '@tybys/wasm-util': 0.10.1
     optional: true
 
-  '@nestjs-modules/mailer@2.3.7(@nestjs/common@11.1.17(class-transformer@0.5.1)(class-validator@0.14.4)(reflect-metadata@0.2.2)(rxjs@7.8.2))(@nestjs/core@11.1.17)(chokidar@4.0.3)(nodemailer@9.0.3)(svgo@4.0.2)(terser@5.46.1)(typescript@5.9.3)':
+  '@nestjs-modules/mailer@2.3.7(@nestjs/common@11.1.17(class-transformer@0.5.1)(class-validator@0.14.4)(reflect-metadata@0.2.2)(rxjs@7.8.2))(@nestjs/core@11.1.17)(nodemailer@9.0.3)(svgo@4.0.2)(terser@5.46.1)(typescript@5.9.3)':
     dependencies:
       '@css-inline/css-inline': 0.20.0
       '@nestjs/common': 11.1.17(class-transformer@0.5.1)(class-validator@0.14.4)(reflect-metadata@0.2.2)(rxjs@7.8.2)
@@ -6911,7 +6909,7 @@ snapshots:
       handlebars: 4.7.9
       liquidjs: 10.27.2
       mjml: 5.4.0(svgo@4.0.2)(terser@5.46.1)(typescript@5.9.3)
-      nunjucks: 3.2.4(chokidar@4.0.3)
+      nunjucks: 3.2.4
       preview-email: 3.2.0
       pug: 3.0.4
     transitivePeerDependencies:
@@ -7337,22 +7335,22 @@ snapshots:
 
   '@tsconfig/node16@1.0.4': {}
 
-  '@turbo/darwin-64@2.8.20':
+  '@turbo/darwin-64@2.11.10':
     optional: true
 
-  '@turbo/darwin-arm64@2.8.20':
+  '@turbo/darwin-arm64@2.11.10':
     optional: true
 
-  '@turbo/linux-64@2.8.20':
+  '@turbo/linux-64@2.11.10':
     optional: true
 
-  '@turbo/linux-arm64@2.8.20':
+  '@turbo/linux-arm64@2.11.10':
     optional: true
 
-  '@turbo/windows-64@2.8.20':
+  '@turbo/windows-64@2.11.10':
     optional: true
 
-  '@turbo/windows-arm64@2.8.20':
+  '@turbo/windows-arm64@2.11.10':
     optional: true
 
   '@tybys/wasm-util@0.10.1':
@@ -7590,9 +7588,9 @@ snapshots:
       '@typescript-eslint/types': 8.57.2
       '@typescript-eslint/visitor-keys': 8.57.2
       debug: 4.4.3
-      minimatch: 10.2.4
+      minimatch: 10.2.5
       semver: 7.7.4
-      tinyglobby: 0.2.15
+      tinyglobby: 0.2.17
       ts-api-utils: 2.5.0(typescript@5.9.3)
       typescript: 5.9.3
     transitivePeerDependencies:
@@ -8092,7 +8090,6 @@ snapshots:
   brace-expansion@5.0.7:
     dependencies:
       balanced-match: 4.0.4
-    optional: true
 
   braces@3.0.3:
     dependencies:
@@ -8179,7 +8176,7 @@ snapshots:
   caniuse-api@3.0.0:
     dependencies:
       browserslist: 4.28.7
-      caniuse-lite: 1.0.30001781
+      caniuse-lite: 1.0.30001806
       lodash.memoize: 4.1.2
       lodash.uniq: 4.5.0
     optional: true
@@ -8888,7 +8885,7 @@ snapshots:
       eslint: 9.39.4(jiti@2.6.1)
       eslint-import-resolver-node: 0.3.9
       eslint-import-resolver-typescript: 3.10.1(eslint-plugin-import@2.32.0(eslint@9.39.4(jiti@2.6.1)))(eslint@9.39.4(jiti@2.6.1))
-      eslint-plugin-import: 2.32.0(eslint-import-resolver-typescript@3.10.1(eslint-plugin-import@2.32.0(eslint@9.39.4(jiti@2.6.1)))(eslint@9.39.4(jiti@2.6.1)))(eslint@9.39.4(jiti@2.6.1))
+      eslint-plugin-import: 2.32.0(eslint-import-resolver-typescript@3.10.1)(eslint@9.39.4(jiti@2.6.1))
       eslint-plugin-jsx-a11y: 6.10.2(eslint@9.39.4(jiti@2.6.1))
       eslint-plugin-react: 7.37.5(eslint@9.39.4(jiti@2.6.1))
       eslint-plugin-react-hooks: 7.0.1(eslint@9.39.4(jiti@2.6.1))
@@ -8925,7 +8922,7 @@ snapshots:
       tinyglobby: 0.2.15
       unrs-resolver: 1.11.1
     optionalDependencies:
-      eslint-plugin-import: 2.32.0(eslint-import-resolver-typescript@3.10.1(eslint-plugin-import@2.32.0(eslint@9.39.4(jiti@2.6.1)))(eslint@9.39.4(jiti@2.6.1)))(eslint@9.39.4(jiti@2.6.1))
+      eslint-plugin-import: 2.32.0(eslint-import-resolver-typescript@3.10.1)(eslint@9.39.4(jiti@2.6.1))
     transitivePeerDependencies:
       - supports-color
 
@@ -8939,7 +8936,7 @@ snapshots:
     transitivePeerDependencies:
       - supports-color
 
-  eslint-plugin-import@2.32.0(eslint-import-resolver-typescript@3.10.1(eslint-plugin-import@2.32.0(eslint@9.39.4(jiti@2.6.1)))(eslint@9.39.4(jiti@2.6.1)))(eslint@9.39.4(jiti@2.6.1)):
+  eslint-plugin-import@2.32.0(eslint-import-resolver-typescript@3.10.1)(eslint@9.39.4(jiti@2.6.1)):
     dependencies:
       '@rtsao/scc': 1.1.0
       array-includes: 3.1.9
@@ -9486,7 +9483,7 @@ snapshots:
 
   glob@13.0.6:
     dependencies:
-      minimatch: 10.2.4
+      minimatch: 10.2.5
       minipass: 7.1.3
       path-scurry: 2.0.2
 
@@ -9512,15 +9509,6 @@ snapshots:
 
   graceful-fs@4.2.11: {}
 
-  handlebars@4.7.8:
-    dependencies:
-      minimist: 1.2.8
-      neo-async: 2.6.2
-      source-map: 0.6.1
-      wordwrap: 1.0.0
-    optionalDependencies:
-      uglify-js: 3.19.3
-
   handlebars@4.7.9:
     dependencies:
       minimist: 1.2.8
@@ -9529,7 +9517,6 @@ snapshots:
       wordwrap: 1.0.0
     optionalDependencies:
       uglify-js: 3.19.3
-    optional: true
 
   has-bigints@1.1.0: {}
 
@@ -10553,7 +10540,6 @@ snapshots:
   minimatch@10.2.5:
     dependencies:
       brace-expansion: 5.0.7
-    optional: true
 
   minimatch@3.1.5:
     dependencies:
@@ -10570,7 +10556,7 @@ snapshots:
   mjml-accordion@5.4.0(svgo@4.0.2)(terser@5.46.1)(typescript@5.9.3):
     dependencies:
       '@babel/runtime': 7.29.7
-      lodash: 4.17.23
+      lodash: 4.18.1
       mjml-core: 5.4.0(svgo@4.0.2)(terser@5.46.1)(typescript@5.9.3)
     transitivePeerDependencies:
       - purgecss
@@ -10585,7 +10571,7 @@ snapshots:
   mjml-body@5.4.0(svgo@4.0.2)(terser@5.46.1)(typescript@5.9.3):
     dependencies:
       '@babel/runtime': 7.29.7
-      lodash: 4.17.23
+      lodash: 4.18.1
       mjml-core: 5.4.0(svgo@4.0.2)(terser@5.46.1)(typescript@5.9.3)
     transitivePeerDependencies:
       - purgecss
@@ -10600,7 +10586,7 @@ snapshots:
   mjml-button@5.4.0(svgo@4.0.2)(terser@5.46.1)(typescript@5.9.3):
     dependencies:
       '@babel/runtime': 7.29.7
-      lodash: 4.17.23
+      lodash: 4.18.1
       mjml-core: 5.4.0(svgo@4.0.2)(terser@5.46.1)(typescript@5.9.3)
     transitivePeerDependencies:
       - purgecss
@@ -10615,7 +10601,7 @@ snapshots:
   mjml-carousel@5.4.0(svgo@4.0.2)(terser@5.46.1)(typescript@5.9.3):
     dependencies:
       '@babel/runtime': 7.29.7
-      lodash: 4.17.23
+      lodash: 4.18.1
       mjml-core: 5.4.0(svgo@4.0.2)(terser@5.46.1)(typescript@5.9.3)
     transitivePeerDependencies:
       - purgecss
@@ -10632,7 +10618,7 @@ snapshots:
       '@babel/runtime': 7.29.7
       chokidar: 4.0.3
       glob: 11.1.0
-      lodash: 4.17.23
+      lodash: 4.18.1
       minimatch: 10.2.5
       mjml-core: 5.4.0(svgo@4.0.2)(terser@5.46.1)(typescript@5.9.3)
       mjml-parser-xml: 5.4.0
@@ -10652,7 +10638,7 @@ snapshots:
   mjml-column@5.4.0(svgo@4.0.2)(terser@5.46.1)(typescript@5.9.3):
     dependencies:
       '@babel/runtime': 7.29.7
-      lodash: 4.17.23
+      lodash: 4.18.1
       mjml-core: 5.4.0(svgo@4.0.2)(terser@5.46.1)(typescript@5.9.3)
     transitivePeerDependencies:
       - purgecss
@@ -10674,7 +10660,7 @@ snapshots:
       htmlnano: 3.4.0(cssnano@7.1.9(postcss@8.5.8))(postcss@8.5.8)(svgo@4.0.2)(terser@5.46.1)(typescript@5.9.3)
       js-beautify: 1.15.4
       juice: 11.1.1
-      lodash: 4.17.23
+      lodash: 4.18.1
       mjml-parser-xml: 5.4.0
       mjml-validator: 5.4.0
       postcss: 8.5.8
@@ -10691,7 +10677,7 @@ snapshots:
   mjml-divider@5.4.0(svgo@4.0.2)(terser@5.46.1)(typescript@5.9.3):
     dependencies:
       '@babel/runtime': 7.29.7
-      lodash: 4.17.23
+      lodash: 4.18.1
       mjml-core: 5.4.0(svgo@4.0.2)(terser@5.46.1)(typescript@5.9.3)
     transitivePeerDependencies:
       - purgecss
@@ -10706,7 +10692,7 @@ snapshots:
   mjml-group@5.4.0(svgo@4.0.2)(terser@5.46.1)(typescript@5.9.3):
     dependencies:
       '@babel/runtime': 7.29.7
-      lodash: 4.17.23
+      lodash: 4.18.1
       mjml-core: 5.4.0(svgo@4.0.2)(terser@5.46.1)(typescript@5.9.3)
     transitivePeerDependencies:
       - purgecss
@@ -10721,7 +10707,7 @@ snapshots:
   mjml-head-attributes@5.4.0(svgo@4.0.2)(terser@5.46.1)(typescript@5.9.3):
     dependencies:
       '@babel/runtime': 7.29.7
-      lodash: 4.17.23
+      lodash: 4.18.1
       mjml-core: 5.4.0(svgo@4.0.2)(terser@5.46.1)(typescript@5.9.3)
     transitivePeerDependencies:
       - purgecss
@@ -10736,7 +10722,7 @@ snapshots:
   mjml-head-breakpoint@5.4.0(svgo@4.0.2)(terser@5.46.1)(typescript@5.9.3):
     dependencies:
       '@babel/runtime': 7.29.7
-      lodash: 4.17.23
+      lodash: 4.18.1
       mjml-core: 5.4.0(svgo@4.0.2)(terser@5.46.1)(typescript@5.9.3)
     transitivePeerDependencies:
       - purgecss
@@ -10751,7 +10737,7 @@ snapshots:
   mjml-head-font@5.4.0(svgo@4.0.2)(terser@5.46.1)(typescript@5.9.3):
     dependencies:
       '@babel/runtime': 7.29.7
-      lodash: 4.17.23
+      lodash: 4.18.1
       mjml-core: 5.4.0(svgo@4.0.2)(terser@5.46.1)(typescript@5.9.3)
     transitivePeerDependencies:
       - purgecss
@@ -10766,7 +10752,7 @@ snapshots:
   mjml-head-html-attributes@5.4.0(svgo@4.0.2)(terser@5.46.1)(typescript@5.9.3):
     dependencies:
       '@babel/runtime': 7.29.7
-      lodash: 4.17.23
+      lodash: 4.18.1
       mjml-core: 5.4.0(svgo@4.0.2)(terser@5.46.1)(typescript@5.9.3)
     transitivePeerDependencies:
       - purgecss
@@ -10781,7 +10767,7 @@ snapshots:
   mjml-head-preview@5.4.0(svgo@4.0.2)(terser@5.46.1)(typescript@5.9.3):
     dependencies:
       '@babel/runtime': 7.29.7
-      lodash: 4.17.23
+      lodash: 4.18.1
       mjml-core: 5.4.0(svgo@4.0.2)(terser@5.46.1)(typescript@5.9.3)
     transitivePeerDependencies:
       - purgecss
@@ -10796,7 +10782,7 @@ snapshots:
   mjml-head-style@5.4.0(svgo@4.0.2)(terser@5.46.1)(typescript@5.9.3):
     dependencies:
       '@babel/runtime': 7.29.7
-      lodash: 4.17.23
+      lodash: 4.18.1
       mjml-core: 5.4.0(svgo@4.0.2)(terser@5.46.1)(typescript@5.9.3)
     transitivePeerDependencies:
       - purgecss
@@ -10811,7 +10797,7 @@ snapshots:
   mjml-head-title@5.4.0(svgo@4.0.2)(terser@5.46.1)(typescript@5.9.3):
     dependencies:
       '@babel/runtime': 7.29.7
-      lodash: 4.17.23
+      lodash: 4.18.1
       mjml-core: 5.4.0(svgo@4.0.2)(terser@5.46.1)(typescript@5.9.3)
     transitivePeerDependencies:
       - purgecss
@@ -10826,7 +10812,7 @@ snapshots:
   mjml-head@5.4.0(svgo@4.0.2)(terser@5.46.1)(typescript@5.9.3):
     dependencies:
       '@babel/runtime': 7.29.7
-      lodash: 4.17.23
+      lodash: 4.18.1
       mjml-core: 5.4.0(svgo@4.0.2)(terser@5.46.1)(typescript@5.9.3)
     transitivePeerDependencies:
       - purgecss
@@ -10841,7 +10827,7 @@ snapshots:
   mjml-hero@5.4.0(svgo@4.0.2)(terser@5.46.1)(typescript@5.9.3):
     dependencies:
       '@babel/runtime': 7.29.7
-      lodash: 4.17.23
+      lodash: 4.18.1
       mjml-core: 5.4.0(svgo@4.0.2)(terser@5.46.1)(typescript@5.9.3)
     transitivePeerDependencies:
       - purgecss
@@ -10856,7 +10842,7 @@ snapshots:
   mjml-image@5.4.0(svgo@4.0.2)(terser@5.46.1)(typescript@5.9.3):
     dependencies:
       '@babel/runtime': 7.29.7
-      lodash: 4.17.23
+      lodash: 4.18.1
       mjml-core: 5.4.0(svgo@4.0.2)(terser@5.46.1)(typescript@5.9.3)
     transitivePeerDependencies:
       - purgecss
@@ -10871,7 +10857,7 @@ snapshots:
   mjml-navbar@5.4.0(svgo@4.0.2)(terser@5.46.1)(typescript@5.9.3):
     dependencies:
       '@babel/runtime': 7.29.7
-      lodash: 4.17.23
+      lodash: 4.18.1
       mjml-core: 5.4.0(svgo@4.0.2)(terser@5.46.1)(typescript@5.9.3)
     transitivePeerDependencies:
       - purgecss
@@ -10932,7 +10918,7 @@ snapshots:
   mjml-raw@5.4.0(svgo@4.0.2)(terser@5.46.1)(typescript@5.9.3):
     dependencies:
       '@babel/runtime': 7.29.7
-      lodash: 4.17.23
+      lodash: 4.18.1
       mjml-core: 5.4.0(svgo@4.0.2)(terser@5.46.1)(typescript@5.9.3)
     transitivePeerDependencies:
       - purgecss
@@ -10947,7 +10933,7 @@ snapshots:
   mjml-section@5.4.0(svgo@4.0.2)(terser@5.46.1)(typescript@5.9.3):
     dependencies:
       '@babel/runtime': 7.29.7
-      lodash: 4.17.23
+      lodash: 4.18.1
       mjml-core: 5.4.0(svgo@4.0.2)(terser@5.46.1)(typescript@5.9.3)
     transitivePeerDependencies:
       - purgecss
@@ -10962,7 +10948,7 @@ snapshots:
   mjml-social@5.4.0(svgo@4.0.2)(terser@5.46.1)(typescript@5.9.3):
     dependencies:
       '@babel/runtime': 7.29.7
-      lodash: 4.17.23
+      lodash: 4.18.1
       mjml-core: 5.4.0(svgo@4.0.2)(terser@5.46.1)(typescript@5.9.3)
     transitivePeerDependencies:
       - purgecss
@@ -10977,7 +10963,7 @@ snapshots:
   mjml-spacer@5.4.0(svgo@4.0.2)(terser@5.46.1)(typescript@5.9.3):
     dependencies:
       '@babel/runtime': 7.29.7
-      lodash: 4.17.23
+      lodash: 4.18.1
       mjml-core: 5.4.0(svgo@4.0.2)(terser@5.46.1)(typescript@5.9.3)
     transitivePeerDependencies:
       - purgecss
@@ -10992,7 +10978,7 @@ snapshots:
   mjml-table@5.4.0(svgo@4.0.2)(terser@5.46.1)(typescript@5.9.3):
     dependencies:
       '@babel/runtime': 7.29.7
-      lodash: 4.17.23
+      lodash: 4.18.1
       mjml-core: 5.4.0(svgo@4.0.2)(terser@5.46.1)(typescript@5.9.3)
     transitivePeerDependencies:
       - purgecss
@@ -11007,7 +10993,7 @@ snapshots:
   mjml-text@5.4.0(svgo@4.0.2)(terser@5.46.1)(typescript@5.9.3):
     dependencies:
       '@babel/runtime': 7.29.7
-      lodash: 4.17.23
+      lodash: 4.18.1
       mjml-core: 5.4.0(svgo@4.0.2)(terser@5.46.1)(typescript@5.9.3)
     transitivePeerDependencies:
       - purgecss
@@ -11027,7 +11013,7 @@ snapshots:
   mjml-wrapper@5.4.0(svgo@4.0.2)(terser@5.46.1)(typescript@5.9.3):
     dependencies:
       '@babel/runtime': 7.29.7
-      lodash: 4.17.23
+      lodash: 4.18.1
       mjml-core: 5.4.0(svgo@4.0.2)(terser@5.46.1)(typescript@5.9.3)
       mjml-section: 5.4.0(svgo@4.0.2)(terser@5.46.1)(typescript@5.9.3)
     transitivePeerDependencies:
@@ -11149,13 +11135,11 @@ snapshots:
       boolbase: 1.0.0
     optional: true
 
-  nunjucks@3.2.4(chokidar@4.0.3):
+  nunjucks@3.2.4:
     dependencies:
       a-sync-waterfall: 1.0.1
       asap: 2.0.6
       commander: 5.1.0
-    optionalDependencies:
-      chokidar: 4.0.3
     optional: true
 
   nypm@0.6.5:
@@ -12338,7 +12322,6 @@ snapshots:
     dependencies:
       fdir: 6.5.0(picomatch@4.0.4)
       picomatch: 4.0.4
-    optional: true
 
   tlds@1.261.0:
     optional: true
@@ -12370,7 +12353,7 @@ snapshots:
     dependencies:
       bs-logger: 0.2.6
       fast-json-stable-stringify: 2.1.0
-      handlebars: 4.7.8
+      handlebars: 4.7.9
       jest: 30.3.0(@types/node@22.19.15)(esbuild-register@3.6.0(esbuild@0.27.4))(ts-node@10.9.2(@swc/core@1.15.21)(@types/node@22.19.15)(typescript@5.9.3))
       json5: 2.2.3
       lodash.memoize: 4.1.2
@@ -12439,14 +12422,14 @@ snapshots:
 
   tslib@2.8.1: {}
 
-  turbo@2.8.20:
+  turbo@2.11.10:
     optionalDependencies:
-      '@turbo/darwin-64': 2.8.20
-      '@turbo/darwin-arm64': 2.8.20
-      '@turbo/linux-64': 2.8.20
-      '@turbo/linux-arm64': 2.8.20
-      '@turbo/windows-64': 2.8.20
-      '@turbo/windows-arm64': 2.8.20
+      '@turbo/darwin-64': 2.11.10
+      '@turbo/darwin-arm64': 2.11.10
+      '@turbo/linux-64': 2.11.10
+      '@turbo/linux-arm64': 2.11.10
+      '@turbo/windows-64': 2.11.10
+      '@turbo/windows-arm64': 2.11.10
 
   type-check@0.4.0:
     dependencies:
