@@ -18,3 +18,52 @@ model User {
   passwordResetToken   String?  @unique
   passwordResetExpires DateTime?
 }
+
+enum Channel {
+  WHATSAPP
+  SITE
+}
+
+enum MessageRole {
+  USER
+  ASSISTANT
+  HUMAN
+}
+
+model Contact {
+  id            String         @id @default(uuid())
+  channel       Channel
+  externalId    String
+  name          String?
+  createdAt     DateTime       @default(now())
+  updatedAt     DateTime       @updatedAt
+  conversations Conversation[]
+
+  @@unique([channel, externalId])
+}
+
+model Conversation {
+  id                String    @id @default(uuid())
+  contactId         String
+  contact           Contact   @relation(fields: [contactId], references: [id], onDelete: Cascade)
+  humanTakeover     Boolean   @default(false)
+  handoffAt         DateTime?
+  lastUserMessageAt DateTime?
+  createdAt         DateTime  @default(now())
+  updatedAt         DateTime  @updatedAt
+  messages          Message[]
+
+  @@index([contactId])
+}
+
+model Message {
+  id             String       @id @default(uuid())
+  conversationId String
+  conversation   Conversation @relation(fields: [conversationId], references: [id], onDelete: Cascade)
+  role           MessageRole
+  content        String
+  externalId     String?      @unique
+  createdAt      DateTime     @default(now())
+
+  @@index([conversationId, createdAt])
+}
