@@ -12,7 +12,7 @@ export interface IncomingMessage {
   messageId?: string;
 }
 
-export type ChatStatus = 'replied' | 'duplicate' | 'error';
+export type ChatStatus = 'replied' | 'duplicate' | 'quota' | 'error';
 
 export interface ChatResult {
   status: ChatStatus;
@@ -21,6 +21,10 @@ export interface ChatResult {
 }
 
 const HISTORY_LIMIT = 20;
+const DEFAULT_DAILY_LIMIT = 30;
+const DAY_MS = 24 * 60 * 60 * 1000;
+const DEFAULT_QUOTA_MESSAGE =
+  'Por hoje atingimos o limite de mensagens por aqui. Amanhã eu volto a te responder. 🙂';
 
 @Injectable()
 export class ChatService {
@@ -60,6 +64,15 @@ export class ChatService {
       data: { lastUserMessageAt: new Date() },
     });
 
+    const quota = await this.checkQuota(conversation);
+    if (quota.exceeded) {
+      return {
+        status: 'quota',
+        reply: quota.firstExcess ? this.quotaMessage() : null,
+        conversationId: conversation.id,
+      };
+    }
+
     try {
       const history = await this.loadHistory(conversation.id);
       const reply = await this.gemini.generate(
@@ -80,6 +93,29 @@ export class ChatService {
       );
       return { status: 'error', reply: null, conversationId: conversation.id };
     }
+  }
+
+  private async checkQuota(conversation: { contactId: string }) {
+    const limit = this.dailyLimit();
+    const used = await this.prisma.message.count({
+      where: {
+        role: MessageRole.USER,
+        createdAt: { gte: new Date(Date.now() - DAY_MS) },
+        conversation: { contactId: conversation.contactId },
+      },
+    });
+    return { exceeded: used > limit, firstExcess: used === limit + 1 };
+  }
+
+  private dailyLimit(): number {
+    const configured = Number(process.env.DAILY_MESSAGE_LIMIT);
+    return Number.isInteger(configured) && configured > 0
+      ? configured
+      : DEFAULT_DAILY_LIMIT;
+  }
+
+  private quotaMessage(): string {
+    return process.env.QUOTA_MESSAGE || DEFAULT_QUOTA_MESSAGE;
   }
 
   private async alreadyProcessed(messageId: string): Promise<boolean> {

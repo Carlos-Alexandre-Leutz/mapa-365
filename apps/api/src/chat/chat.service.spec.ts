@@ -9,6 +9,7 @@ function buildPrisma() {
       findUnique: jest.fn().mockResolvedValue(null),
       create: jest.fn().mockResolvedValue({}),
       findMany: jest.fn().mockResolvedValue([]),
+      count: jest.fn().mockResolvedValue(1),
     },
     contact: { upsert: jest.fn().mockResolvedValue({ id: 'contact-1' }) },
     conversation: {
@@ -71,6 +72,53 @@ describe('ChatService', () => {
     await service.handleIncoming(incoming);
     expect(prisma.conversation.create).toHaveBeenCalledWith({
       data: { contactId: 'contact-1' },
+    });
+  });
+
+  describe('cota diária', () => {
+    afterEach(() => {
+      delete process.env.DAILY_MESSAGE_LIMIT;
+      delete process.env.QUOTA_MESSAGE;
+    });
+
+    it('conta só as mensagens do contato nas últimas 24 horas', async () => {
+      await service.handleIncoming(incoming);
+      const where = prisma.message.count.mock.calls[0][0].where;
+      expect(where.role).toBe(MessageRole.USER);
+      expect(where.conversation).toEqual({ contactId: 'contact-1' });
+      expect(Date.now() - where.createdAt.gte.getTime()).toBeGreaterThan(23 * 3600_000);
+    });
+
+    it('responde normalmente até o limite', async () => {
+      process.env.DAILY_MESSAGE_LIMIT = '5';
+      prisma.message.count.mockResolvedValue(5);
+      const result = await service.handleIncoming(incoming);
+      expect(result.status).toBe('replied');
+    });
+
+    it('avisa uma vez ao passar do limite e não chama a IA', async () => {
+      process.env.DAILY_MESSAGE_LIMIT = '5';
+      prisma.message.count.mockResolvedValue(6);
+      const result = await service.handleIncoming(incoming);
+      expect(result.status).toBe('quota');
+      expect(result.reply).toContain('limite');
+      expect(gemini.generate).not.toHaveBeenCalled();
+    });
+
+    it('depois do aviso, fica em silêncio sem gastar IA', async () => {
+      process.env.DAILY_MESSAGE_LIMIT = '5';
+      prisma.message.count.mockResolvedValue(7);
+      const result = await service.handleIncoming(incoming);
+      expect(result).toMatchObject({ status: 'quota', reply: null });
+      expect(gemini.generate).not.toHaveBeenCalled();
+    });
+
+    it('usa a mensagem configurada e ignora limite inválido', async () => {
+      process.env.DAILY_MESSAGE_LIMIT = 'abc';
+      process.env.QUOTA_MESSAGE = 'Volte amanhã!';
+      prisma.message.count.mockResolvedValue(31);
+      const result = await service.handleIncoming(incoming);
+      expect(result.reply).toBe('Volte amanhã!');
     });
   });
 
