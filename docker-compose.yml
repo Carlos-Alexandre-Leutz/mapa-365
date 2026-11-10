@@ -1,5 +1,5 @@
-# Produção (VPS). Só o que o proxy HTTPS precisa enxergar fica publicado,
-# e apenas em 127.0.0.1. O banco e a API não têm porta aberta para fora.
+# Produção (VPS). O banco e a API não têm porta aberta para fora.
+# O MVP sobe só db e api; bff e frontend ficam em perfis para quando o chat do site e a área logada entrarem.
 services:
   db:
     image: postgres:16-alpine
@@ -16,8 +16,9 @@ services:
     build:
       context: .
       dockerfile: Dockerfile
+      args:
+        SERVICE: api
     restart: always
-    command: pnpm --filter @mapa365/api start
     expose:
       - "3002"
     depends_on:
@@ -26,29 +27,32 @@ services:
       - DATABASE_URL=postgresql://${POSTGRES_USER}:${POSTGRES_PASSWORD}@db:5432/${POSTGRES_DB}?schema=public
 
   bff:
-    build:
-      context: .
-      dockerfile: Dockerfile
-    restart: always
-    command: pnpm --filter @mapa365/bff start
-    ports:
-      - "127.0.0.1:3001:3001"
-    depends_on:
-      - api
-    environment:
-      - API_URL=http://api:3002
-      - ALLOWED_ORIGINS=${ALLOWED_ORIGINS:?defina ALLOWED_ORIGINS no .env}
-
-  frontend:
+    profiles: ["site"]
     build:
       context: .
       dockerfile: Dockerfile
       args:
-        NEXT_PUBLIC_BFF_URL: ${NEXT_PUBLIC_BFF_URL:?defina NEXT_PUBLIC_BFF_URL no .env}
+        SERVICE: bff
     restart: always
-    command: pnpm --filter @mapa365/web start
-    ports:
-      - "127.0.0.1:3000:3000"
+    expose:
+      - "3001"
+    depends_on:
+      - api
+    environment:
+      - API_URL=http://api:3002
+      - ALLOWED_ORIGINS=${ALLOWED_ORIGINS:-}
+
+  frontend:
+    profiles: ["site"]
+    build:
+      context: .
+      dockerfile: Dockerfile
+      args:
+        SERVICE: web
+        NEXT_PUBLIC_BFF_URL: ${NEXT_PUBLIC_BFF_URL:-}
+    restart: always
+    expose:
+      - "3000"
 
 volumes:
   postgres_data:
