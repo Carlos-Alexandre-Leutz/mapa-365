@@ -12,6 +12,6 @@ async function bootstrap() {
 
   await app.listen(port, '0.0.0.0');
 
-  console.log(`✅ Microserviço API-TASKS rodando em: ${port}`);
+  console.log(`✅ API rodando em: ${port}`);
 }
 bootstrap();

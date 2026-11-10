@@ -11,7 +11,7 @@ import axios from 'axios';
 
 @Controller('auth')
 export class AuthController {
-  private readonly coreAuthUrl = process.env.TASKS_API_URL;
+  private readonly coreAuthUrl = process.env.API_URL;
 
   constructor(private readonly httpService: HttpService) {}
 

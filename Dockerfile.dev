@@ -10,13 +10,13 @@ WORKDIR /app
 
 COPY pnpm-lock.yaml pnpm-workspace.yaml package.json ./
 COPY apps/bff/package.json ./apps/bff/
-COPY apps/api-tasks/package.json ./apps/api-tasks/
+COPY apps/api/package.json ./apps/api/
 COPY apps/web/package.json ./apps/web/
 
 RUN pnpm install --no-frozen-lockfile
 
-COPY apps/api-tasks/prisma ./apps/api-tasks/prisma
-RUN pnpm --filter api-tasks exec prisma generate
+COPY apps/api/prisma ./apps/api/prisma
+RUN pnpm --filter @mapa365/api exec prisma generate
 
 COPY . .
 
