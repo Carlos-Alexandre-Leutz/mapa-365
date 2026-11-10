@@ -12,17 +12,22 @@ export interface IncomingMessage {
   messageId?: string;
 }
 
-export type ChatStatus = 'replied' | 'duplicate' | 'quota' | 'error';
+export type ChatStatus = 'replied' | 'duplicate' | 'human' | 'quota' | 'error';
 
 export interface ChatResult {
   status: ChatStatus;
   reply: string | null;
   conversationId?: string;
+  handoff?: boolean;
 }
 
 const HISTORY_LIMIT = 20;
 const DEFAULT_DAILY_LIMIT = 30;
 const DAY_MS = 24 * 60 * 60 * 1000;
+const HANDOFF_MARKER = '[[HUMANO]]';
+const HANDOFF_REQUEST = /\b(falar com|conversar com|chamar|passa(?:r)? (?:para|pra)) (?:(?:o|a|um|uma) )?(?:alexandre|atendente|humano|pessoa)\b/i;
+const DEFAULT_HANDOFF_MESSAGE =
+  'Claro! Vou avisar o Alexandre e ele continua essa conversa com você por aqui.';
 const DEFAULT_QUOTA_MESSAGE =
   'Por hoje atingimos o limite de mensagens por aqui. Amanhã eu volto a te responder. 🙂';
 
@@ -64,6 +69,10 @@ export class ChatService {
       data: { lastUserMessageAt: new Date() },
     });
 
+    if (conversation.humanTakeover) {
+      return { status: 'human', reply: null, conversationId: conversation.id };
+    }
+
     const quota = await this.checkQuota(conversation);
     if (quota.exceeded) {
       return {
@@ -73,19 +82,21 @@ export class ChatService {
       };
     }
 
+    if (HANDOFF_REQUEST.test(incoming.text)) {
+      return this.handOff(conversation.id, this.handoffMessage());
+    }
+
     try {
       const history = await this.loadHistory(conversation.id);
       const reply = await this.gemini.generate(
         this.knowledge.getSystemPrompt(),
         history,
       );
-      await this.prisma.message.create({
-        data: {
-          conversationId: conversation.id,
-          role: MessageRole.ASSISTANT,
-          content: reply,
-        },
-      });
+      if (reply.includes(HANDOFF_MARKER)) {
+        const clean = reply.replaceAll(HANDOFF_MARKER, '').trim();
+        return this.handOff(conversation.id, clean || this.handoffMessage());
+      }
+      await this.saveAssistantMessage(conversation.id, reply);
       return { status: 'replied', reply, conversationId: conversation.id };
     } catch (error) {
       this.logger.error(
@@ -93,6 +104,29 @@ export class ChatService {
       );
       return { status: 'error', reply: null, conversationId: conversation.id };
     }
+  }
+
+  async setHumanTakeover(conversationId: string, active: boolean) {
+    return this.prisma.conversation.update({
+      where: { id: conversationId },
+      data: { humanTakeover: active, handoffAt: active ? new Date() : null },
+    });
+  }
+
+  private async handOff(conversationId: string, reply: string): Promise<ChatResult> {
+    await this.saveAssistantMessage(conversationId, reply);
+    await this.setHumanTakeover(conversationId, true);
+    return { status: 'replied', reply, conversationId, handoff: true };
+  }
+
+  private saveAssistantMessage(conversationId: string, content: string) {
+    return this.prisma.message.create({
+      data: { conversationId, role: MessageRole.ASSISTANT, content },
+    });
+  }
+
+  private handoffMessage(): string {
+    return process.env.HANDOFF_MESSAGE || DEFAULT_HANDOFF_MESSAGE;
   }
 
   private async checkQuota(conversation: { contactId: string }) {

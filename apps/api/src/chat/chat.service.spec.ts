@@ -1,7 +1,7 @@
 import { MessageRole, Prisma } from '@prisma/client';
 import { ChatService } from './chat.service';
 
-const conversation = { id: 'conv-1', contactId: 'contact-1' };
+const conversation = { id: 'conv-1', contactId: 'contact-1', humanTakeover: false };
 
 function buildPrisma() {
   return {
@@ -119,6 +119,69 @@ describe('ChatService', () => {
       prisma.message.count.mockResolvedValue(31);
       const result = await service.handleIncoming(incoming);
       expect(result.reply).toBe('Volte amanhã!');
+    });
+  });
+
+  describe('handoff para humano', () => {
+    afterEach(() => {
+      delete process.env.HANDOFF_MESSAGE;
+    });
+
+    it('não responde quando o humano já assumiu, mas guarda a mensagem', async () => {
+      prisma.conversation.findFirst.mockResolvedValue({ ...conversation, humanTakeover: true });
+      const result = await service.handleIncoming(incoming);
+      expect(result).toMatchObject({ status: 'human', reply: null });
+      expect(gemini.generate).not.toHaveBeenCalled();
+      expect(prisma.message.create).toHaveBeenCalledTimes(1);
+    });
+
+    it('a IA pede handoff com o marcador, que é removido da resposta', async () => {
+      gemini.generate.mockResolvedValue('Vou chamar o Alexandre. [[HUMANO]]');
+      const result = await service.handleIncoming(incoming);
+      expect(result).toMatchObject({ status: 'replied', reply: 'Vou chamar o Alexandre.', handoff: true });
+      expect(prisma.conversation.update).toHaveBeenLastCalledWith({
+        where: { id: 'conv-1' },
+        data: { humanTakeover: true, handoffAt: expect.any(Date) },
+      });
+      const saved = prisma.message.create.mock.calls.at(-1)![0].data;
+      expect(saved.content).toBe('Vou chamar o Alexandre.');
+    });
+
+    it('pedido explícito do contato dispara handoff sem chamar a IA', async () => {
+      const result = await service.handleIncoming({ ...incoming, text: 'quero falar com o Alexandre' });
+      expect(result).toMatchObject({ status: 'replied', handoff: true });
+      expect(result.reply).toContain('Alexandre');
+      expect(gemini.generate).not.toHaveBeenCalled();
+    });
+
+    it.each([
+      'quero falar com uma pessoa',
+      'pode chamar o atendente?',
+      'me passa pra um humano',
+      'preciso conversar com o Alexandre',
+    ])('reconhece o pedido: %s', async (text) => {
+      const result = await service.handleIncoming({ ...incoming, text });
+      expect(result.handoff).toBe(true);
+    });
+
+    it('não confunde conversa normal com pedido de humano', async () => {
+      const result = await service.handleIncoming({ ...incoming, text: 'falar com calma sobre o curso' });
+      expect(result.handoff).toBeUndefined();
+      expect(gemini.generate).toHaveBeenCalled();
+    });
+
+    it('usa a mensagem de handoff configurada', async () => {
+      process.env.HANDOFF_MESSAGE = 'Já te chamo!';
+      const result = await service.handleIncoming({ ...incoming, text: 'quero falar com um atendente' });
+      expect(result.reply).toBe('Já te chamo!');
+    });
+
+    it('setHumanTakeover(false) devolve a conversa para a IA', async () => {
+      await service.setHumanTakeover('conv-1', false);
+      expect(prisma.conversation.update).toHaveBeenCalledWith({
+        where: { id: 'conv-1' },
+        data: { humanTakeover: false, handoffAt: null },
+      });
     });
   });
 
