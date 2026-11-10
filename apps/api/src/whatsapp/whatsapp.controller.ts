@@ -1,5 +1,7 @@
 import {
+  Body,
   Controller,
+  Logger,
   ForbiddenException,
   Get,
   Header,
@@ -9,9 +11,14 @@ import {
   UseGuards,
 } from '@nestjs/common';
 import { MetaSignatureGuard } from './meta-signature.guard';
+import { WhatsappService } from './whatsapp.service';
 
 @Controller('webhooks/whatsapp')
 export class WhatsappController {
+  private readonly logger = new Logger(WhatsappController.name);
+
+  constructor(private readonly whatsapp: WhatsappService) {}
+
   @Get()
   @Header('content-type', 'text/plain')
   verify(
@@ -29,7 +36,11 @@ export class WhatsappController {
   @Post()
   @HttpCode(200)
   @UseGuards(MetaSignatureGuard)
-  receive(): string {
+  receive(@Body() payload: unknown): string {
+    // Responde 200 na hora; a Meta reenvia se a resposta demorar.
+    this.whatsapp.process(payload).catch((error: Error) => {
+      this.logger.error(`Falha no processamento em segundo plano: ${error.message}`);
+    });
     return 'EVENT_RECEIVED';
   }
 }

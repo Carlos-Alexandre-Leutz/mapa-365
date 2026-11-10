@@ -3,6 +3,9 @@ import { Test } from '@nestjs/testing';
 import { createHmac } from 'crypto';
 import request from 'supertest';
 import { WhatsappController } from './whatsapp.controller';
+import { WhatsappService } from './whatsapp.service';
+
+const whatsappServiceMock = { process: jest.fn().mockResolvedValue(undefined) };
 
 describe('WhatsappController - verificação do webhook', () => {
   let app: INestApplication;
@@ -10,6 +13,7 @@ describe('WhatsappController - verificação do webhook', () => {
   beforeAll(async () => {
     const moduleRef = await Test.createTestingModule({
       controllers: [WhatsappController],
+      providers: [{ provide: WhatsappService, useValue: whatsappServiceMock }],
     }).compile();
     app = moduleRef.createNestApplication({ rawBody: true });
     await app.init();
@@ -77,6 +81,7 @@ describe('WhatsappController - assinatura das mensagens', () => {
   beforeAll(async () => {
     const moduleRef = await Test.createTestingModule({
       controllers: [WhatsappController],
+      providers: [{ provide: WhatsappService, useValue: whatsappServiceMock }],
     }).compile();
     app = moduleRef.createNestApplication({ rawBody: true });
     await app.init();
@@ -102,10 +107,24 @@ describe('WhatsappController - assinatura das mensagens', () => {
     return req.send(payload);
   };
 
-  it('aceita uma chamada com assinatura válida', async () => {
+  it('aceita uma chamada com assinatura válida e processa o corpo', async () => {
+    whatsappServiceMock.process.mockClear();
     const res = await post(body, sign(body));
     expect(res.status).toBe(200);
     expect(res.text).toBe('EVENT_RECEIVED');
+    expect(whatsappServiceMock.process).toHaveBeenCalledWith(JSON.parse(body));
+  });
+
+  it('responde 200 sem esperar o processamento terminar', async () => {
+    whatsappServiceMock.process.mockReturnValueOnce(new Promise(() => undefined));
+    const res = await post(body, sign(body));
+    expect(res.status).toBe(200);
+  });
+
+  it('não processa nada quando a assinatura é inválida', async () => {
+    whatsappServiceMock.process.mockClear();
+    await post(body, sign(body, 'outro'));
+    expect(whatsappServiceMock.process).not.toHaveBeenCalled();
   });
 
   it('recusa assinatura calculada com outro segredo', async () => {
