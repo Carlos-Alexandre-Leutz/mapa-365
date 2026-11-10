@@ -65,6 +65,57 @@ describe('WhatsappService', () => {
     expect(chat.handleIncoming).not.toHaveBeenCalled();
   });
 
+  describe('aviso de handoff ao responsável', () => {
+    afterEach(() => {
+      delete process.env.HANDOFF_NOTIFY_NUMBER;
+    });
+
+    const handoff = () =>
+      chat.handleIncoming.mockResolvedValue({ status: 'replied', reply: 'Já chamo o Alexandre', handoff: true });
+
+    it('avisa o número do responsável com quem pediu e o que disse', async () => {
+      process.env.HANDOFF_NOTIFY_NUMBER = '5547988887777';
+      handoff();
+      await service.process(
+        payload([text('wamid.1', 'quero falar com o Alexandre')], [
+          { wa_id: '5547999990000', profile: { name: 'Maria' } },
+        ]),
+      );
+
+      expect(sender.sendText).toHaveBeenNthCalledWith(1, '5547999990000', 'Já chamo o Alexandre');
+      const [to, body] = sender.sendText.mock.calls[1];
+      expect(to).toBe('5547988887777');
+      expect(body).toContain('Maria (5547999990000)');
+      expect(body).toContain('quero falar com o Alexandre');
+    });
+
+    it('resume mensagens muito longas no aviso', async () => {
+      process.env.HANDOFF_NOTIFY_NUMBER = '5547988887777';
+      handoff();
+      await service.process(payload([text('wamid.1', 'x'.repeat(500))]));
+      expect(sender.sendText.mock.calls[1][1].length).toBeLessThan(400);
+    });
+
+    it('sem número configurado, só registra no log', async () => {
+      handoff();
+      await service.process(payload([text('wamid.1')]));
+      expect(sender.sendText).toHaveBeenCalledTimes(1);
+    });
+
+    it('falha no aviso não derruba o atendimento', async () => {
+      process.env.HANDOFF_NOTIFY_NUMBER = '5547988887777';
+      handoff();
+      sender.sendText.mockResolvedValueOnce(undefined).mockRejectedValueOnce(new Error('fora da janela'));
+      await expect(service.process(payload([text('wamid.1')]))).resolves.toBeUndefined();
+    });
+
+    it('não avisa quando não houve handoff', async () => {
+      process.env.HANDOFF_NOTIFY_NUMBER = '5547988887777';
+      await service.process(payload([text('wamid.1')]));
+      expect(sender.sendText).toHaveBeenCalledTimes(1);
+    });
+  });
+
   it('trata várias mensagens do mesmo envio, na ordem', async () => {
     await service.process(payload([text('wamid.1', 'a'), text('wamid.2', 'b')]));
     expect(chat.handleIncoming.mock.calls.map((c) => c[0].messageId)).toEqual(['wamid.1', 'wamid.2']);
