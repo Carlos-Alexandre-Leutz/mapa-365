@@ -31,3 +31,10 @@ O Postgres só aceita conexões de `127.0.0.1`.
 ## Produção
 
 `docker-compose.yml` expõe apenas `web` e `bff`, e só em `127.0.0.1`, para um proxy HTTPS na frente. O banco e a `api` não têm porta aberta para fora. Todas as credenciais vêm do `.env`.
+
+## Documentação
+
+- [Base de conhecimento da IA](docs/conhecimento.md)
+- [WhatsApp: variáveis e teste local](docs/whatsapp.md)
+- [Servidor: preparação e primeiro deploy](docs/servidor.md)
+- [Backup e restauração](docs/backup.md)
