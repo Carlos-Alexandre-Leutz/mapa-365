@@ -22,3 +22,7 @@ Sem a pasta `knowledge/`, a API usa `apps/api/knowledge.example/`, com dados fic
 | `[[HUMANO]]` | A IA para de responder naquela conversa e o responsável é avisado. O marcador é removido antes de enviar a resposta. |
 
 Variáveis sem valor em `variables.json` continuam aparecendo como `{{NOME}}` no prompt, com um aviso no log. Confira o log depois de editar.
+
+## No servidor
+
+O `docker-compose.yml` monta a pasta do servidor `KNOWLEDGE_HOST_DIR` (padrão `./knowledge`, ao lado do compose) como `/knowledge`, somente leitura, e aponta `KNOWLEDGE_DIR` para ela. O `.dockerignore` impede que `knowledge/` entre na imagem, e o `.gitignore`, que entre no repositório. Para atualizar o atendimento basta editar os arquivos no servidor: eles são relidos a cada mensagem, sem rebuild nem restart.

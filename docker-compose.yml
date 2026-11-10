@@ -23,8 +23,15 @@ services:
       - "3002"
     depends_on:
       - db
+    # Segredos (Gemini, Meta...) vêm do .env do servidor; nada disso fica na imagem.
+    env_file:
+      - .env
     environment:
       - DATABASE_URL=postgresql://${POSTGRES_USER}:${POSTGRES_PASSWORD}@db:5432/${POSTGRES_DB}?schema=public
+      - KNOWLEDGE_DIR=/knowledge
+    volumes:
+      # Conteúdo real do atendimento: pasta do servidor, fora do Git e fora da imagem.
+      - ${KNOWLEDGE_HOST_DIR:-./knowledge}:/knowledge:ro
 
   bff:
     profiles: ["site"]
