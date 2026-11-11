@@ -1,0 +1,16 @@
+# Proxy HTTPS. O certificado é emitido e renovado sozinho pelo Caddy (precisa do DNS apontando
+# para este servidor e das portas 80 e 443 abertas).
+{$API_DOMAIN} {
+	encode gzip
+
+	# A Meta chama o webhook do WhatsApp (verificação e mensagens).
+	handle /webhooks/* {
+		reverse_proxy api:3002
+	}
+
+	# Quando o BFF entrar (chat do site), trocar este bloco por:
+	#   handle { reverse_proxy bff:3001 }
+	handle {
+		respond "not found" 404
+	}
+}

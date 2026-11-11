@@ -1,0 +1,10 @@
+[Unit]
+Description=Backup do Postgres do Mapa 365
+
+[Service]
+Type=oneshot
+# Ajuste o caminho do projeto e, se usar rclone, o destino externo.
+WorkingDirectory=/srv/mapa365
+Environment=BACKUP_DIR=/var/backups/mapa365
+# Environment=RCLONE_REMOTE=meubucket:mapa365
+ExecStart=/usr/bin/env bash /srv/mapa365/infra/backup/backup.sh

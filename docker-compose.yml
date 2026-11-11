@@ -1,5 +1,5 @@
-# Produção (VPS). Só o que o proxy HTTPS precisa enxergar fica publicado,
-# e apenas em 127.0.0.1. O banco e a API não têm porta aberta para fora.
+# Produção (VPS). Só o Caddy (80 e 443) é publicado; o banco e a API não têm porta aberta para fora.
+# O MVP sobe só db e api; bff e frontend ficam em perfis para quando o chat do site e a área logada entrarem.
 services:
   db:
     image: postgres:16-alpine
@@ -16,39 +16,78 @@ services:
     build:
       context: .
       dockerfile: Dockerfile
+      args:
+        SERVICE: api
+    image: mapa365-api
     restart: always
-    command: pnpm --filter @mapa365/api start
     expose:
       - "3002"
     depends_on:
       - db
+    # Segredos (Gemini, Meta...) vêm do .env do servidor; nada disso fica na imagem.
+    env_file:
+      - .env
     environment:
       - DATABASE_URL=postgresql://${POSTGRES_USER}:${POSTGRES_PASSWORD}@db:5432/${POSTGRES_DB}?schema=public
+      - KNOWLEDGE_DIR=/knowledge
+    volumes:
+      # Conteúdo real do atendimento: pasta do servidor, fora do Git e fora da imagem.
+      - ${KNOWLEDGE_HOST_DIR:-./knowledge}:/knowledge:ro
+
+  # Aplica as migrations do Prisma: docker compose --profile tools run --rm migrate
+  migrate:
+    profiles: ["tools"]
+    image: mapa365-api
+    depends_on:
+      - db
+    environment:
+      - DATABASE_URL=postgresql://${POSTGRES_USER}:${POSTGRES_PASSWORD}@db:5432/${POSTGRES_DB}?schema=public
+    command: pnpm --filter @mapa365/api exec prisma migrate deploy --schema=./prisma/schema.prisma
 
   bff:
-    build:
-      context: .
-      dockerfile: Dockerfile
-    restart: always
-    command: pnpm --filter @mapa365/bff start
-    ports:
-      - "127.0.0.1:3001:3001"
-    depends_on:
-      - api
-    environment:
-      - API_URL=http://api:3002
-      - ALLOWED_ORIGINS=${ALLOWED_ORIGINS:?defina ALLOWED_ORIGINS no .env}
-
-  frontend:
+    profiles: ["site"]
     build:
       context: .
       dockerfile: Dockerfile
       args:
-        NEXT_PUBLIC_BFF_URL: ${NEXT_PUBLIC_BFF_URL:?defina NEXT_PUBLIC_BFF_URL no .env}
+        SERVICE: bff
     restart: always
-    command: pnpm --filter @mapa365/web start
+    expose:
+      - "3001"
+    depends_on:
+      - api
+    environment:
+      - API_URL=http://api:3002
+      - ALLOWED_ORIGINS=${ALLOWED_ORIGINS:-}
+
+  frontend:
+    profiles: ["site"]
+    build:
+      context: .
+      dockerfile: Dockerfile
+      args:
+        SERVICE: web
+        NEXT_PUBLIC_BFF_URL: ${NEXT_PUBLIC_BFF_URL:-}
+    restart: always
+    expose:
+      - "3000"
+
+  caddy:
+    image: caddy:2-alpine
+    restart: always
     ports:
-      - "127.0.0.1:3000:3000"
+      - "80:80"
+      - "443:443"
+    depends_on:
+      - api
+    environment:
+      - API_DOMAIN=${API_DOMAIN:?defina API_DOMAIN no .env}
+    volumes:
+      - ./infra/Caddyfile:/etc/caddy/Caddyfile:ro
+      - caddy_data:/data
+      - caddy_config:/config
 
 volumes:
   postgres_data:
+  caddy_data:
+  caddy_config:
