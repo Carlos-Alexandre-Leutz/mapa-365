@@ -23,6 +23,16 @@ Sem a pasta `knowledge/`, a API usa `apps/api/knowledge.example/`, com dados fic
 
 Variáveis sem valor em `variables.json` continuam aparecendo como `{{NOME}}` no prompt, com um aviso no log. Confira o log depois de editar.
 
+## Avaliar as respostas
+
+`apps/api/eval/` tem 8 perguntas fixas (resposta curta, injeção de prompt, promessa de emprego, assunto fora do curso, algo que não está no roteiro, contato irritado, idioma). Rode antes e depois de mexer no prompt:
+
+```bash
+GEMINI_API_KEY=... pnpm --filter @mapa365/api eval
+```
+
+Usa a base de `knowledge/` (ou o exemplo), chama o Gemini de verdade (gasta tokens) e sai com código 1 se algum caso falhar. Os critérios ficam em `eval/cases.ts` e são regras simples de texto: servem para detectar regressão, não para medir a qualidade da conversa.
+
 ## No servidor
 
 O `docker-compose.yml` monta a pasta do servidor `KNOWLEDGE_HOST_DIR` (padrão `./knowledge`, ao lado do compose) como `/knowledge`, somente leitura, e aponta `KNOWLEDGE_DIR` para ela. O `.dockerignore` impede que `knowledge/` entre na imagem, e o `.gitignore`, que entre no repositório. Para atualizar o atendimento basta editar os arquivos no servidor: eles são relidos a cada mensagem, sem rebuild nem restart.
