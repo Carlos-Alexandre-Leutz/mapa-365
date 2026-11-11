@@ -1,10 +1,20 @@
-import { Injectable, Logger } from '@nestjs/common';
+import { Injectable, Logger, OnModuleInit } from '@nestjs/common';
 import { existsSync, readFileSync } from 'fs';
 import { join } from 'path';
 
 @Injectable()
-export class KnowledgeService {
+export class KnowledgeService implements OnModuleInit {
   private readonly logger = new Logger(KnowledgeService.name);
+
+  onModuleInit() {
+    try {
+      this.getSystemPrompt();
+    } catch (error) {
+      this.logger.error(
+        `Base de conhecimento indisponível (${(error as Error).message}). A IA não responde até o prompt.md existir.`,
+      );
+    }
+  }
 
   getSystemPrompt(): string {
     const dir = this.resolveDir();

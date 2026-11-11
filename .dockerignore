@@ -1,0 +1,16 @@
+# Nada disso entra nas imagens
+.git
+.github
+**/node_modules
+**/dist
+**/.next
+**/.turbo
+**/coverage
+.env
+.env.*
+!.env.example
+docs
+infra
+
+# Conteúdo real do atendimento (preço, garantia, FAQ): fica fora das imagens e é montado como volume
+**/knowledge
